@@ -21,7 +21,9 @@ class EsService extends BaseService
         static::RegisterIndexAlreadyExistsException();
         try {
 
-            return $this->put("/" . $index->getName(), $index);
+            $response = $this->put("/" . $index->getName(), $index);
+
+            return $response;
         } catch (IndexAlreadyExistsException $e) {
             $this->clearIndex($index);
 
@@ -37,7 +39,9 @@ class EsService extends BaseService
     {
         static::RegisterIndexNotFoundException();
 
-        return $this->delete("/" . $index->getName())->getStatusCode() === 200;
+        $response = $this->delete("/" . $index->getName());
+
+        return $response->getStatusCode() === 200;
     }
 
     /**
