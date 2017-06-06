@@ -3,13 +3,10 @@
 
 namespace Tests\Indexes;
 
-
-use JMS\Serializer\Annotation as JMS;
+use Tests\Fixtures\TestUser;
 use Tests\Tools\ES_TestHelper;
-use Tests\Tools\TestHelper;
 use Unrlab\Client\Http\Client;
 use Unrlab\Domain\Document\Document;
-use Unrlab\Domain\Document\Indexable;
 use Unrlab\Service\EsService;
 
 class DocumentCRUDTest extends ES_TestHelper
@@ -95,6 +92,15 @@ class DocumentCRUDTest extends ES_TestHelper
         self::assertTrue($response);
     }
 
+    public function testShouldReturnTrueWhenDeletingADocumentType()
+    {
+        $document1 = new Document(null, "global_search", "user", [], TestUser::class);
+
+        $response = $this->ES_Service->clearType($document1->getIndex(), $document1->getType());
+
+        self::assertTrue($response);
+    }
+
     public function testShouldReturnRequestedDocument()
     {
         $docData1 = [
@@ -117,52 +123,3 @@ class DocumentCRUDTest extends ES_TestHelper
 
 }
 
-class TestUser extends Indexable
-{
-    /**
-     * @JMS\Type("string")
-     */
-    private $familyName;
-    /**
-     * @JMS\Type("string")
-     */
-    private $givenName;
-    /**
-     * @JMS\Type("integer")
-     */
-    private $age;
-
-    /**
-     * User constructor.
-     */
-    public function __construct($familyName, $givenName, $age)
-    {
-        $this->familyName = $familyName;
-        $this->givenName = $givenName;
-        $this->age = $age;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getFamilyName()
-    {
-        return $this->familyName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getGivenName()
-    {
-        return $this->givenName;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getAge()
-    {
-        return $this->age;
-    }
-}

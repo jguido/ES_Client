@@ -16,7 +16,17 @@ trait Serializer
 
     private function __construct()
     {
-        $this->serializer = SerializerBuilder::create()->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())->build();
+        $builder = new SerializerBuilder();
+        $serializer = $this->serializer = $builder->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())->build();
+        $builder
+            ->configureHandlers(function(\JMS\Serializer\Handler\HandlerRegistry $registry) use ($serializer) {
+                $registry->registerHandler('deserialization', 'DateTime', 'json',
+                    function($visitor, $obj, array $type) use ($serializer) {
+                        return \DateTime::createFromFormat($type['params'][0], $obj['date']);
+                    }
+                );
+            })
+        ;
     }
 
     /**

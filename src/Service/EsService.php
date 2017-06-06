@@ -9,7 +9,9 @@ use Unrlab\Client\Exception\DocumentNotFoundException;
 use Unrlab\Client\Exception\IndexAlreadyExistsException;
 use Unrlab\Client\Http\BaseService;
 use Unrlab\Domain\Document\Document;
+use Unrlab\Domain\Document\Indexable;
 use Unrlab\Domain\Mapping\Index;
+use Unrlab\Domain\Query\Query;
 
 class EsService extends BaseService
 {
@@ -21,7 +23,7 @@ class EsService extends BaseService
 
             return $this->put("/" . $index->getName(), $index);
         } catch (IndexAlreadyExistsException $e) {
-            $this->delete("/" . $index->getName());
+            $this->clearIndex($index);
 
             return $this->put("/" . $index->getName(), $index);
         }
@@ -98,5 +100,49 @@ class EsService extends BaseService
         $responseArray = json_decode($response->getBody()->getContents(), true);
 
         return $responseArray['found'] ?? false;
+    }
+
+    /**
+     * @param Query $query
+     * @param string|null $class
+     * @return array|Document
+     */
+    public function query(Query $query, $domain = null): array
+    {
+        $route = $query->buildRoute();
+        $response = $this->post($route, $query);
+
+        return $this->fetchQueryResult(json_decode($response->getBody()->getContents(), true), $domain);
+    }
+
+    public function clearType($index, $type)
+    {
+        return $this->post("/" . $index . "/" . $type . "/_delete_by_query", ["query" => ["match_all" => new \stdClass()]])->getStatusCode() === 200;
+    }
+    /**
+     * @param array $queryResult
+     * @param string|null $domain
+     * @return array
+     */
+    protected function fetchQueryResult(array $queryResult, $domain = null)
+    {
+        $result = [];
+        if(array_key_exists('hits', $queryResult) && array_key_exists('hits', $queryResult['hits'])) {
+            $hits = $queryResult['hits']['hits'];
+            $result = array_map(function($el) use ($domain){
+                if ($domain) {
+                    $object = $this->deserialize(json_encode($el['_source']), $domain);
+                    if ($object instanceof Indexable) {
+                        $object->setIndexId($el['_id']);
+                    }
+
+                    return $object;
+                } else {
+                    return $el['_source'];
+                }
+            }, $hits);
+        }
+
+        return $result;
     }
 }

@@ -4,7 +4,7 @@
 namespace Unrlab\Domain\Query;
 
 
-use Unrlab\Domain\Query\DSL\BaseDSL;
+use Unrlab\Domain\Query\Dsl\BaseDSL;
 
 class Filter extends BaseDSL
 {

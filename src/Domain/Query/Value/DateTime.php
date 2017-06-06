@@ -6,7 +6,7 @@ namespace Unrlab\Domain\Query\Value;
 
 use Unrlab\Domain\Query\Dsl\ValueInterface;
 
-class Date implements ValueInterface
+class DateTime implements ValueInterface
 {
     const GTE = "gte";
     const GT  = "gt";
@@ -26,6 +26,6 @@ class Date implements ValueInterface
      */
     public function getValue(): array
     {
-        return [ $this->operator => $this->dateString, "format" => "yyyy-MM-dd"];
+        return [ $this->operator => $this->dateString, "format" => "yyyy-MM-dd HH:mm:ss"];
     }
 }

@@ -4,6 +4,7 @@
 namespace Unrlab\Domain\Query;
 
 use JMS\Serializer\Annotation as JMS;
+use Unrlab\Domain\Mapping\Index;
 use Unrlab\Domain\Query\DSL\BaseDSL;
 
 /*
@@ -44,13 +45,25 @@ class Query implements \JsonSerializable
     protected $filterList = [];
 
     /**
+     * @var Index
+     * @JMS\Type("Unrlab\Domain\Mapping\Index")
+     */
+    protected $index;
+
+    /**
+     * @var string
+     * @JMS\Type("string")
+     */
+    protected $type;
+
+    /**
      * @param Must $must
      * @return Query
      */
     public function addMust(Must $must): self
     {
         $this->mustDataList[] = $must;
-        
+
         return $this;
     }
 
@@ -61,7 +74,7 @@ class Query implements \JsonSerializable
     public function setMustList(array $mustList): self
     {
         $this->mustDataList = $mustList;
-        
+
         return $this;
     }
 
@@ -72,7 +85,7 @@ class Query implements \JsonSerializable
     public function addShould(Should $should): self
     {
         $this->shouldDataList[] = $should;
-        
+
         return $this;
     }
 
@@ -83,7 +96,7 @@ class Query implements \JsonSerializable
     public function setShouldList(array $shouldList): self
     {
         $this->shouldDataList[] = $shouldList;
-        
+
         return $this;
     }
 
@@ -94,7 +107,7 @@ class Query implements \JsonSerializable
     public function addFilter(Filter $filter): self
     {
         $this->filterList[] = $filter;
-        
+
         return $this;
     }
 
@@ -105,16 +118,60 @@ class Query implements \JsonSerializable
     public function setFilterList(array $filterList): self
     {
         $this->filterList = $filterList;
-        
+
         return $this;
     }
 
     /**
-     * @return array
+     * @return Index
      */
-    public function build(): array 
+    public function getIndex(): Index
     {
-        return $this->jsonSerialize();
+        return $this->index;
+    }
+
+    /**
+     * @param Index $index
+     * @return Query
+     */
+    public function setIndex(Index $index): self
+    {
+        $this->index = $index;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Query
+     */
+    public function setType($type): self
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function buildRoute(): string
+    {
+        $route = "/" . $this->getIndex()->getName();
+        if ($this->getType() && !empty($this->getType())) {
+            $route .= "/" . $this->getType();
+        }
+        $route .= "/_search";
+
+        return $route;
     }
 
 
@@ -127,16 +184,17 @@ class Query implements \JsonSerializable
      */
     function jsonSerialize()
     {
-        $query =  [
+        $query = [
             "query" => [
                 "bool" => []
             ]
         ];
+        $query["query"]["bool"]["must"][] = ["match_all" => new \stdClass()];
         if (count($this->mustDataList) > 0) {
-            $query["query"]["bool"]["must"] = $this->buildSubQuery($this->mustDataList);
+            $query["query"]["bool"]["must"][] = $this->buildSubQuery($this->mustDataList);
         }
         if (count($this->shouldDataList) > 0) {
-            $query["query"]["shoul"]["should"] = $this->buildSubQuery($this->shouldDataList);
+            $query["query"]["bool"]["should"] = $this->buildSubQuery($this->shouldDataList);
         }
         if (count($this->filterList) > 0) {
             $query["query"]["bool"]["filter"] = $this->buildSubQuery($this->filterList);
@@ -147,7 +205,6 @@ class Query implements \JsonSerializable
     }
 
     /**
-     * @param string $key
      * @param BaseDSL[] $list
      * @return array
      */
@@ -159,7 +216,7 @@ class Query implements \JsonSerializable
                 $subQuery[] = $el->jsonSerialize();
             }
         }
-        
+
         return $subQuery;
     }
 }

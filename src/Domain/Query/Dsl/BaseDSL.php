@@ -3,6 +3,9 @@
 
 namespace Unrlab\Domain\Query\Dsl;
 
+use Unrlab\Domain\Query\Value\Date;
+use Unrlab\Domain\Query\Value\DateTime;
+
 abstract class BaseDSL implements QueryDSLInterface, \JsonSerializable
 {
     /**
@@ -64,8 +67,9 @@ abstract class BaseDSL implements QueryDSLInterface, \JsonSerializable
      */
     function jsonSerialize()
     {
+        $field = $this->getValue() instanceof Date || $this->getValue() instanceof DateTime ? $this->getField().".date" : $this->getField();
         return [
-            $this->getType() => [ $this->getField() => $this->getValue()->getValue() ]
+            $this->getType() => [ $field => $this->getValue()->getValue() ]
         ];
     }
 }
