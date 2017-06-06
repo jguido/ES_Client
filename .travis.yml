@@ -8,4 +8,4 @@ before_script:
 
 script:
   - ./vendor/bin/phpmd src xml ruleset.xml --reportfile phpmd_report.xml
-  - phpunit --configuration phpunit.xml --coverage-text
+  - phpunit --configuration tests/phpunit.xml --coverage-text
