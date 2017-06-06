@@ -49,7 +49,7 @@ class EsService extends BaseService
         static::RegisterDocumentNotFoundException();
         $response = $this->get($document->getIndex().'/'.$document->getType().'/'.$document->getId());
 
-        $data = $this->deserializeDocument($response, $document->getFqdn());
+        $data = $this->deserializeDocument($response->getBody()->getContents(), $document->getFqdn());
 
         return new Document($data->getIndexId(), $document->getIndex(), $document->getType(), $data, $document->getFqdn());
     }
@@ -97,6 +97,7 @@ class EsService extends BaseService
     {
         static::RegisterDocumentNotFoundException();
         $response = $this->delete($document->getIndex().'/'.$document->getType().'/'.$document->getId());
+
         $responseArray = json_decode($response->getBody()->getContents(), true);
 
         return $responseArray['found'] ?? false;
@@ -117,7 +118,9 @@ class EsService extends BaseService
 
     public function clearType($index, $type)
     {
-        return $this->post("/" . $index . "/" . $type . "/_delete_by_query", ["query" => ["match_all" => new \stdClass()]])->getStatusCode() === 200;
+        $response = $this->post("/" . $index . "/" . $type . "/_delete_by_query", ["query" => ["match_all" => new \stdClass()]]);
+
+        return $response->getStatusCode() === 200;
     }
     /**
      * @param array $queryResult

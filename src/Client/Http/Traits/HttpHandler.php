@@ -41,9 +41,9 @@ trait HttpHandler
     /**
      * @param $uri
      * @param array $extraHeaders
-     * @return string
+     * @return ResponseInterface
      */
-    protected function get($uri, $extraHeaders = []): string
+    protected function get($uri, $extraHeaders = []): ResponseInterface
     {
         $this->logNotice('GET request to uri: ' . $uri);
         $request = $this->client->getRequestBuilder()
@@ -62,10 +62,8 @@ trait HttpHandler
             $this->throwException($clientException);
         }
 
-        $data = $response->getBody()->getContents();
         $this->logNotice('SUCCESS');
-
-        return $data;
+        return  $response;
     }
 
     /**

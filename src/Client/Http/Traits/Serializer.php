@@ -58,6 +58,7 @@ trait Serializer
     {
         $jsonData = json_decode($data, true);
         $object = $this->deserialize(json_encode($jsonData['_source']), $domain);
+
         if ($object instanceof Indexable) {
             $object->setIndexId($jsonData['_id']);
         }
