@@ -25,9 +25,10 @@ class IndexClientTest extends ES_TestHelper
         $this->Mocked_ES_Service = new EsService($this->mockedClient, $this->logger);
     }
 
-
     public function testShouldReturnOkAfterCreatingAnIndex()
     {
+        $this->addToExpectedResponses(new Response(200, [], '{"acknowledged":true,"shards_acknowledged":true}'));
+        $this->addToExpectedResponses(new Response(400));
         $this->addToExpectedResponses(new Response(200, [], '{"acknowledged":true,"shards_acknowledged":true}'));
 
         $propertyFamilyName = new Property('familyName', Type::TEXT);

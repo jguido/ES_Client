@@ -67,9 +67,9 @@ abstract class BaseDSL implements QueryDSLInterface, \JsonSerializable
      */
     function jsonSerialize()
     {
-        $field = $this->getValue() instanceof Date || $this->getValue() instanceof DateTime ? $this->getField().".date" : $this->getField();
+
         return [
-            $this->getType() => [ $field => $this->getValue()->getValue() ]
+            $this->getType() => [ $this->getField() => $this->getValue()->getValue() ]
         ];
     }
 }

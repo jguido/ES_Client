@@ -1,5 +1,6 @@
 <?php
 
+namespace Tests\Client;
 
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +21,7 @@ class GuzzleClientTest extends TestCase
     }
     public function testClientWithBadPaths()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $routes = [
             'test1' => 'http:0.0.0.0:80',
             'test2' => 'http:0.0.0.0:81',

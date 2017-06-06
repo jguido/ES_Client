@@ -53,39 +53,6 @@ class Mapping
     }
 
     /**
-     * @param Property[] $properties
-     * @return Mapping
-     */
-    public function setProperties(array $properties = []): self
-    {
-        $this->properties = $properties;
-
-        return $this;
-    }
-
-    /**
-     * @param Property $property
-     * @return Mapping
-     */
-    public function addProperty(Property $property): self
-    {
-        $this->properties[] = $property;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $indexAll
-     * @return Mapping
-     */
-    public function setIndexAll(bool $indexAll): self
-    {
-        $this->indexAll = $indexAll;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isIndexAll(): bool

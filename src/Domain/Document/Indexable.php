@@ -3,7 +3,13 @@
 
 namespace Unrlab\Domain\Document;
 
-
+/**
+ * Class Indexable
+ * @package Unrlab\Domain\Document
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ */
 abstract class Indexable
 {
     /**

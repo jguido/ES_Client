@@ -40,7 +40,7 @@ abstract class TestHelper extends TestCase
     public function setUp()
     {
         $nullHandler = new NullHandler();
-        $this->logger = new Logger('Api', [$nullHandler]);
+        $this->logger = new Logger('ES', [$nullHandler]);
         $this->mock = new MockHandler([]);
         $this->handler = HandlerStack::create($this->mock);
 

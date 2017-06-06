@@ -65,7 +65,12 @@ class EsService extends BaseService
     public function createDocument(Document $document): Document
     {
         try {
-            $response = $this->post($document->getIndex().'/'.$document->getType().'/'.$document->getId(), $document->getData());
+            if (!is_array($document->getData())) {
+                $body = json_decode($this->serialize($document->getData(), 'json'), true);
+            } else {
+                $body = $document->getData();
+            }
+            $response = $this->post($document->getIndex().'/'.$document->getType().'/'.$document->getId(), $body);
 
             $responseArray = json_decode($response->getBody()->getContents(), true);
 
@@ -123,7 +128,6 @@ class EsService extends BaseService
     public function clearType($index, $type)
     {
         $response = $this->post("/" . $index . "/" . $type . "/_delete_by_query", ["query" => ["match_all" => new \stdClass()]]);
-
         return $response->getStatusCode() === 200;
     }
     /**
@@ -136,16 +140,16 @@ class EsService extends BaseService
         $result = [];
         if(array_key_exists('hits', $queryResult) && array_key_exists('hits', $queryResult['hits'])) {
             $hits = $queryResult['hits']['hits'];
-            $result = array_map(function($el) use ($domain){
+            $result = array_map(function($hit) use ($domain){
                 if ($domain) {
-                    $object = $this->deserialize(json_encode($el['_source']), $domain);
+                    $object = $this->deserialize(json_encode($hit['_source']), $domain);
                     if ($object instanceof Indexable) {
-                        $object->setIndexId($el['_id']);
+                        $object->setIndexId($hit['_id']);
                     }
 
                     return $object;
                 } else {
-                    return $el['_source'];
+                    return $hit['_source'];
                 }
             }, $hits);
         }

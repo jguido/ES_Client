@@ -33,17 +33,17 @@ trait ExceptionHandler
     }
 
     /**
-     * @param BadResponseException $e
+     * @param BadResponseException $eexception
      * @return \Exception
      */
-    protected static function getExceptionFromCode(BadResponseException $e): \Exception
+    protected static function getExceptionFromCode(BadResponseException $eexception): \Exception
     {
-        if (!isset(static::$exceptionStack[$e->getCode()])) {
-            return new UndefinedClientException($e->getMessage());
+        if (!isset(static::$exceptionStack[$eexception->getCode()])) {
+            return new UndefinedClientException($eexception->getMessage());
         }
-        $exception = static::$exceptionStack[$e->getCode()];
+        $exception = static::$exceptionStack[$eexception->getCode()];
 
-        $exceptionClass = $exception($e->getResponse()->getBody()->getContents());
+        $exceptionClass = $exception($eexception->getResponse()->getBody()->getContents());
         static::clearExceptionStack();
         return $exceptionClass;
     }

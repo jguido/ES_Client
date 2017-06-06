@@ -38,44 +38,6 @@ class Index implements \JsonSerializable
     }
 
     /**
-     * @return Mapping[]
-     */
-    public function getMappings(): array
-    {
-        return $this->mappings;
-    }
-
-    /**
-     * @param Mapping $mapping
-     * @return Index
-     */
-    public function addMapping(Mapping $mapping): self
-    {
-        $this->mappings[] = $mapping;
-
-        return $this;
-    }
-
-    /**
-     * @param Mapping[] $mappings
-     * @return Index
-     */
-    public function setMappings(array $mappings = []): self
-    {
-        $this->mappings = $mappings;
-
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toJson()
-    {
-        return json_encode($this->jsonSerialize());
-    }
-
-    /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by <b>json_encode</b>,

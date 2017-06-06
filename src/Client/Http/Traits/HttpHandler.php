@@ -3,9 +3,9 @@
 namespace Unrlab\Client\Http\Traits;
 
 use GuzzleHttp\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
 use Unrlab\Client\Http\ClientInterface;
 use Unrlab\Client\Http\RequestBuilder;
-use Psr\Http\Message\ResponseInterface;
 
 trait HttpHandler
 {
@@ -43,7 +43,7 @@ trait HttpHandler
      * @param array $extraHeaders
      * @return ResponseInterface
      */
-    protected function get($uri, $extraHeaders = []): ResponseInterface
+    protected function get($uri): ResponseInterface
     {
         $this->logNotice('GET request to uri: ' . $uri);
         $request = $this->client->getRequestBuilder()
@@ -51,10 +51,6 @@ trait HttpHandler
             ->setUri($uri)
             ->setJsonContentType();
 
-        foreach ($extraHeaders as $name => $value) {
-            $request->addHeader($name, $value);
-            $this->logNotice('With header ' . $name . ': ' . $value);
-        }
 
         try {
             $response = $this->send($request);
@@ -73,14 +69,14 @@ trait HttpHandler
      * @return ResponseInterface
      * @throws
      */
-    protected function post($uri, $body = null, $extraHeaders = []): ResponseInterface
+    protected function post($uri, $body = null): ResponseInterface
     {
         $this->logNotice('POST request to uri: ' . $uri);
 
         $request = $this->client->getRequestBuilder()
             ->setMethodToPost();
 
-        return $this->buildRequestWithBody($request, $uri, $body, $extraHeaders);
+        return $this->buildRequestWithBody($request, $uri, $body);
     }
 
     /**
@@ -90,14 +86,14 @@ trait HttpHandler
      * @return ResponseInterface
      * @throws
      */
-    protected function put($uri, $body = null, $extraHeaders = []): ResponseInterface
+    protected function put($uri, $body = null): ResponseInterface
     {
         $this->logNotice('PUT request to uri: ' . $uri);
 
         $request = $this->client->getRequestBuilder()
             ->setMethodToPut();
 
-        return $this->buildRequestWithBody($request, $uri, $body, $extraHeaders);
+        return $this->buildRequestWithBody($request, $uri, $body);
     }
 
     /**
@@ -124,10 +120,10 @@ trait HttpHandler
      */
     protected function throwException(\RuntimeException $clientException)
     {
-        $e = static::getExceptionFromCode($clientException);
-        if ($e) {
-            $this->logError("FAILURE " . get_class($e));
-            throw $e;
+        $exceptionFromCode = static::getExceptionFromCode($clientException);
+        if ($exceptionFromCode) {
+            $this->logError("FAILURE " . get_class($exceptionFromCode));
+            throw $exceptionFromCode;
         }
 
         static::clearExceptionStack();
@@ -138,10 +134,9 @@ trait HttpHandler
      * @param RequestBuilder $request
      * @param $uri
      * @param $body
-     * @param array $extraHeaders
      * @return ResponseInterface
      */
-    private function buildRequestWithBody(RequestBuilder $request, $uri, $body, array $extraHeaders): ResponseInterface
+    private function buildRequestWithBody(RequestBuilder $request, $uri, $body): ResponseInterface
     {
         $request
             ->setUri($uri)
@@ -150,10 +145,6 @@ trait HttpHandler
         if ($body) {
             $this->logNotice('With body :' . json_encode($body));
             $request->setBody($body);
-        }
-        foreach ($extraHeaders as $name => $value) {
-            $request->addHeader($name, $value);
-            $this->logNotice('With header ' . $name . ': ' . $value);
         }
 
         try {

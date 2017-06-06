@@ -17,6 +17,6 @@ class GuzzleClient extends Client implements ClientInterface
      */
     public function getRequestBuilder(): RequestBuilder
     {
-        return new GuzzleRequestBuilder();
+        return parent::getRequestBuilder();
     }
 }

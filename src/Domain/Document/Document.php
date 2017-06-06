@@ -8,6 +8,8 @@ use Unrlab\Tools\Guid;
 /**
  * Class Document
  * @package Unrlab\Domain\Document
+ * @SuppressWarnings(PHPMD.CamelCasePropertyName)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
  */
 class Document
 {

@@ -1,0 +1,11 @@
+language: php
+php:
+  - '7.1'
+
+before_script:
+  - composer self-update
+  - composer install --no-interaction
+
+script:
+  - ./vendor/bin/phpmd src xml ruleset.xml --reportfile phpmd_report.xml
+  - phpunit --configuration phpunit.xml --coverage-text

@@ -63,20 +63,9 @@ abstract class RequestBuilder
 
     abstract public function getRequest(): Request;
 
-    public function addHeader($name, $value): RequestBuilder
-    {
-        $this->headers[$name] = $value;
-        return $this;
-    }
-
     public function setJsonContentType(): RequestBuilder
     {
         $this->headers['Content-Type'] = 'application/json';
         return $this;
-    }
-
-    public function getBodyLength(): int
-    {
-        return $this->bodyLength;
     }
 }

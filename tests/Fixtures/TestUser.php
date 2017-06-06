@@ -22,7 +22,7 @@ class TestUser extends Indexable
     private $givenName;
     /**
      * @var \DateTime
-     * @JMS\Type("DateTime<'c'>")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      */
     private $lastConnection;
     /**
