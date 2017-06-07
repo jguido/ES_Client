@@ -1,6 +1,6 @@
 # ES_Client
 
-[![Build Status](https://travis-ci.org/jguido/ES_Client.svg?branch=master)](https://travis-ci.org/jguido/ES_Client)
+[![Build Status](https://travis-ci.org/jguido/ES_Client.svg?branch=master)](https://travis-ci.org/jguido/ES_Client) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/ef784529-0c3f-405f-ba45-323e9a1f70c6/mini.png)](https://insight.sensiolabs.com/projects/ef784529-0c3f-405f-ba45-323e9a1f70c6)
  
  Running an elastic search docker container :
  ```
