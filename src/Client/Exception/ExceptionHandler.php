@@ -8,26 +8,22 @@ trait ExceptionHandler
 {
     protected static $exceptionStack = [];
 
-//    protected static function RegisterUnableToDeleteUserPropertyException($errorCode)
-//    {
-//        return static::resolveExceptionFromNameInSpecificNamespace(__FUNCTION__, "Property", $errorCode);
-//    }
-    protected static function RegisterDocumentAlreadyExistsExceptionException()
+    protected static function registerDocumentAlreadyExistsExceptionException()
     {
         return static::resolveExceptionFromName(__FUNCTION__, 400);
     }
 
-    protected static function RegisterDocumentNotFoundException()
+    protected static function registerDocumentNotFoundException()
     {
         return static::resolveExceptionFromName(__FUNCTION__, 404);
     }
 
-    protected static function RegisterIndexNotFoundException()
+    protected static function registerIndexNotFoundException()
     {
         return static::resolveExceptionFromName(__FUNCTION__, 404);
     }
 
-    protected static function RegisterIndexAlreadyExistsException()
+    protected static function registerIndexAlreadyExistsException()
     {
         return static::resolveExceptionFromName(__FUNCTION__, 400);
     }

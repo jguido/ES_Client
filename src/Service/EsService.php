@@ -18,7 +18,7 @@ class EsService extends BaseService
 
     public function refreshIndex(Index $index)
     {
-        static::RegisterIndexAlreadyExistsException();
+        static::registerIndexAlreadyExistsException();
         try {
 
             $response = $this->put("/" . $index->getName(), $index);
@@ -37,7 +37,7 @@ class EsService extends BaseService
      */
     public function clearIndex(Index $index): bool
     {
-        static::RegisterIndexNotFoundException();
+        static::registerIndexNotFoundException();
 
         $response = $this->delete("/" . $index->getName());
 
@@ -50,7 +50,7 @@ class EsService extends BaseService
      */
     public function getDocument(Document $document): Document
     {
-        static::RegisterDocumentNotFoundException();
+        static::registerDocumentNotFoundException();
         $response = $this->get($document->getIndex().'/'.$document->getType().'/'.$document->getId());
 
         $data = $this->deserializeDocument($response->getBody()->getContents(), $document->getFqdn());
@@ -86,7 +86,7 @@ class EsService extends BaseService
      */
     public function updateDocument(Document $document): Document
     {
-        static::RegisterDocumentNotFoundException();
+        static::registerDocumentNotFoundException();
         try {
             $response = $this->put($document->getIndex().'/'.$document->getType() .'/'.$document->getId(), $document->getData());
 
@@ -104,7 +104,7 @@ class EsService extends BaseService
      */
     public function deleteDocument(Document $document): bool
     {
-        static::RegisterDocumentNotFoundException();
+        static::registerDocumentNotFoundException();
         $response = $this->delete($document->getIndex().'/'.$document->getType().'/'.$document->getId());
 
         $responseArray = json_decode($response->getBody()->getContents(), true);

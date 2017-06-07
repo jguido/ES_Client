@@ -103,7 +103,7 @@ trait HttpHandler
      */
     protected function delete($uri): ResponseInterface
     {
-        $this->logNotice('DELETE request to uri: ' . $uri);
+        $this->logNotice('DEL request to uri: ' . $uri);
         try {
             $request = $this->client->getRequestBuilder()->setJsonContentType()->setMethodToDelete()->setUri($uri);
             return $this->send($request);

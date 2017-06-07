@@ -3,9 +3,6 @@
 
 namespace Unrlab\Domain\Query\Dsl;
 
-use Unrlab\Domain\Query\Value\Date;
-use Unrlab\Domain\Query\Value\DateTime;
-
 abstract class BaseDSL implements QueryDSLInterface, \JsonSerializable
 {
     /**
