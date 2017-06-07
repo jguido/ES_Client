@@ -9,7 +9,7 @@ namespace Unrlab\Tools;
  */
 class Guid
 {
-    static function next(){
+    public static function next(){
         mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
         $charid = strtoupper(md5(uniqid(rand(), true)));
         $hyphen = chr(45);// "-"
