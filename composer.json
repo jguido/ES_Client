@@ -25,7 +25,7 @@
         "symfony/var-dumper": "^3.3",
         "phpmd/phpmd": "^2.6"
     },
-    "license": "GPL-3.0",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "jeremy",
